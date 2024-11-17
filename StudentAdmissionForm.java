@@ -11,43 +11,57 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class StudentAdmissionForm {
-    
+
     // Declare all the components as instance variables
     private JFrame frame;
     private JTextField nameField, fatherNameField, motherNameField, phoneNumberField, emailField, presentAddressField, permanentAddressField;
     private JComboBox<String> dayCombo, monthCombo, yearCombo;
-    private JRadioButton bloodGroupAPositive, bloodGroupANegative, bloodGroupBPositive, bloodGroupBNegative, 
-                         bloodGroupABPositive, bloodGroupABNegative, bloodGroupOPositive, bloodGroupONegative;
+    private JRadioButton bloodGroupAPositive, bloodGroupANegative, bloodGroupBPositive, bloodGroupBNegative,
+            bloodGroupABPositive, bloodGroupABNegative, bloodGroupOPositive, bloodGroupONegative;
     private JRadioButton maleButton, femaleButton, otherButton;
     private JTextField sscGpaField, hscGpaField, admissionBatchField;
     private JRadioButton SWEButton, CSEButton, EEEButton, BBAButton, LLBButton, EconomicsButton, EnglishButton;
     private JRadioButton fallButton, springButton, summerButton;
     private JButton copyAddressButton;
-    
+
     public StudentAdmissionForm() {
         frame = new JFrame("Student Admission Form");
-        frame.setLayout(new GridLayout(18, 2)); 
-        frame.setSize(400, 800);
-        
-        
-        frame.add(new JLabel("Name:"));
+        frame.setLayout(new BorderLayout(20, 20));  // Added spacing between components
+        frame.setSize(700, 900);
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
+
+        // Header Panel with University Name
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(Color.WHITE);
+        JLabel universityLabel = new JLabel("<html><span style='color:blue;'>Metropolitan</span> <span style='color:red;'>U</span><span style='color:grey;'>niversity</span></html>", JLabel.CENTER);
+        universityLabel.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 30));  // Increased bold and italic effect
+        headerPanel.add(universityLabel);
+        frame.add(headerPanel, BorderLayout.NORTH);
+
+        // Form Panel with padding around the edges
+        JPanel formPanel = new JPanel(new GridLayout(18, 2, 10, 10));  // Added spacing between components in grid
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));  // Padding around the form panel
+        frame.add(formPanel, BorderLayout.CENTER);
+
+        formPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
-        frame.add(nameField);
-        
-        
-        frame.add(new JLabel("Father's Name:"));
+        formPanel.add(nameField);
+
+        formPanel.add(new JLabel("Father's Name:"));
         fatherNameField = new JTextField();
-        frame.add(fatherNameField);
-        
-        
-        frame.add(new JLabel("Mother's Name:"));
+        formPanel.add(fatherNameField);
+
+        formPanel.add(new JLabel("Mother's Name:"));
         motherNameField = new JTextField();
-        frame.add(motherNameField);
-        
+        formPanel.add(motherNameField);
+
         // Date of Birth (Day, Month, Year)
-        frame.add(new JLabel("Date of Birth:"));
+        formPanel.add(new JLabel("Date of Birth:"));
         JPanel datePanel = new JPanel();
         dayCombo = new JComboBox<>();
         for (int i = 1; i <= 31; i++) dayCombo.addItem(String.format("%02d", i));
@@ -57,10 +71,10 @@ public class StudentAdmissionForm {
         datePanel.add(dayCombo);
         datePanel.add(monthCombo);
         datePanel.add(yearCombo);
-        frame.add(datePanel);
-        
+        formPanel.add(datePanel);
+
         // Blood Group (Radio Buttons)
-        frame.add(new JLabel("Blood Group:"));
+        formPanel.add(new JLabel("Blood Group:"));
         JPanel bloodGroupPanel = new JPanel();
         bloodGroupAPositive = new JRadioButton("A+");
         bloodGroupANegative = new JRadioButton("A-");
@@ -87,10 +101,10 @@ public class StudentAdmissionForm {
         bloodGroupPanel.add(bloodGroupABNegative);
         bloodGroupPanel.add(bloodGroupOPositive);
         bloodGroupPanel.add(bloodGroupONegative);
-        frame.add(bloodGroupPanel);
-        
+        formPanel.add(bloodGroupPanel);
+
         // Gender (Radio Buttons)
-        frame.add(new JLabel("Gender:"));
+        formPanel.add(new JLabel("Gender:"));
         JPanel genderPanel = new JPanel();
         maleButton = new JRadioButton("Male");
         femaleButton = new JRadioButton("Female");
@@ -102,51 +116,51 @@ public class StudentAdmissionForm {
         genderPanel.add(maleButton);
         genderPanel.add(femaleButton);
         genderPanel.add(otherButton);
-        frame.add(genderPanel);
-        
+        formPanel.add(genderPanel);
+
         // Phone Number
-        frame.add(new JLabel("Phone Number:"));
+        formPanel.add(new JLabel("Phone Number:"));
         phoneNumberField = new JTextField();
-        frame.add(phoneNumberField);
-        
+        formPanel.add(phoneNumberField);
+
         // Email Address
-        frame.add(new JLabel("Email Address:"));
+        formPanel.add(new JLabel("Email Address:"));
         emailField = new JTextField();
-        frame.add(emailField);
-        
+        formPanel.add(emailField);
+
         // Present Address
-        frame.add(new JLabel("Present Address:"));
+        formPanel.add(new JLabel("Present Address:"));
         presentAddressField = new JTextField();
-        frame.add(presentAddressField);
-        
+        formPanel.add(presentAddressField);
+
         // Permanent Address
-        frame.add(new JLabel("Permanent Address:"));
+        formPanel.add(new JLabel("Permanent Address:"));
         permanentAddressField = new JTextField();
-        frame.add(permanentAddressField);
-        
+        formPanel.add(permanentAddressField);
+
         // Copy Present Address to Permanent Address Button
-        frame.add(new JLabel("Copy Present Address to Permanent Address:"));
+        formPanel.add(new JLabel("Copy Present Address to Permanent Address:"));
         copyAddressButton = new JButton("Copy Address");
-        frame.add(copyAddressButton);
-        
+        formPanel.add(copyAddressButton);
+
         copyAddressButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 permanentAddressField.setText(presentAddressField.getText());
             }
         });
-        
+
         // HSC and SSC GPA fields
-        frame.add(new JLabel("SSC GPA:"));
+        formPanel.add(new JLabel("SSC GPA:"));
         sscGpaField = new JTextField();
-        frame.add(sscGpaField);
-        
-        frame.add(new JLabel("HSC GPA:"));
+        formPanel.add(sscGpaField);
+
+        formPanel.add(new JLabel("HSC GPA:"));
         hscGpaField = new JTextField();
-        frame.add(hscGpaField);
-        
+        formPanel.add(hscGpaField);
+
         // Department choice (Radio Buttons)
-        frame.add(new JLabel("Department:"));
+        formPanel.add(new JLabel("Department:"));
         JPanel departmentPanel = new JPanel();
         SWEButton = new JRadioButton("SWE");
         CSEButton = new JRadioButton("CSE");
@@ -170,14 +184,14 @@ public class StudentAdmissionForm {
         departmentPanel.add(LLBButton);
         departmentPanel.add(EconomicsButton);
         departmentPanel.add(EnglishButton);
-        frame.add(departmentPanel);
-        
+        formPanel.add(departmentPanel);
+
         // Admission Batch number and Session
-        frame.add(new JLabel("Admission Batch Number:"));
+        formPanel.add(new JLabel("Admission Batch Number:"));
         admissionBatchField = new JTextField();
-        frame.add(admissionBatchField);
-        
-        frame.add(new JLabel("Session:"));
+        formPanel.add(admissionBatchField);
+
+        formPanel.add(new JLabel("Session:"));
         JPanel sessionPanel = new JPanel();
         fallButton = new JRadioButton("Fall");
         springButton = new JRadioButton("Spring");
@@ -189,16 +203,27 @@ public class StudentAdmissionForm {
         sessionPanel.add(fallButton);
         sessionPanel.add(springButton);
         sessionPanel.add(summerButton);
-        frame.add(sessionPanel);
-        
-        // Submit Button
+        formPanel.add(sessionPanel);
+
+        // Submit and Cancel Buttons at the bottom center
+        JPanel buttonPanel = new JPanel();
         JButton submitButton = new JButton("Submit");
-        frame.add(submitButton);
-        
+        JButton cancelButton = new JButton("Cancel");
+        buttonPanel.add(submitButton);
+        buttonPanel.add(cancelButton);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 validateForm();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Close the form when cancel is clicked
             }
         });
 
@@ -207,6 +232,11 @@ public class StudentAdmissionForm {
     }
 
     private void validateForm() {
+        // Get the student details
+        String studentName = nameField.getText().trim();
+        String department = getSelectedDepartment();
+        String batch = admissionBatchField.getText().trim();
+
         // Validate if the birth year is between 1990 and 2005
         int birthYear = Integer.parseInt(yearCombo.getSelectedItem().toString());
         if (birthYear < 1990 || birthYear > 2005) {
@@ -216,21 +246,69 @@ public class StudentAdmissionForm {
 
         // Validate Phone Number (should be exactly 11 digits)
         String phoneNumber = phoneNumberField.getText();
-        if (phoneNumber.length() != 11 || !phoneNumber.matches("\\d+")) {
+        if (phoneNumber.length() != 11) {
             JOptionPane.showMessageDialog(frame, "Phone number must be exactly 11 digits.");
             return;
         }
 
-        // Validate GPA for SWE, CSE, and EEE
-        String sscGpa = sscGpaField.getText();
-        String hscGpa = hscGpaField.getText();
-        if ((SWEButton.isSelected() || CSEButton.isSelected() || EEEButton.isSelected()) &&
-            (Double.parseDouble(sscGpa) < 2.5 || Double.parseDouble(hscGpa) < 2.5)) {
-            JOptionPane.showMessageDialog(frame, "You cannot apply to SWE, CSE or EEE if your GPA is below 2.5");
+        // Validate SSC and HSC GPA
+        try {
+            double sscGpa = Double.parseDouble(sscGpaField.getText());
+            double hscGpa = Double.parseDouble(hscGpaField.getText());
+            if (sscGpa < 2.0 || sscGpa > 5.0 || hscGpa < 2.0 || hscGpa > 5.0) {
+                JOptionPane.showMessageDialog(frame, "SSC and HSC GPA must be between 2.0 and 5.0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "SSC and HSC GPA must be valid numbers.");
             return;
         }
 
-        JOptionPane.showMessageDialog(frame, "Form submitted successfully!");
+        // Save form data to file
+        saveToFile(studentName, department, batch);
+        JOptionPane.showMessageDialog(frame, "Form Submitted Successfully!");
+    }
+
+    private String getSelectedDepartment() {
+        if (SWEButton.isSelected()) return "SWE";
+        if (CSEButton.isSelected()) return "CSE";
+        if (EEEButton.isSelected()) return "EEE";
+        if (BBAButton.isSelected()) return "BBA";
+        if (LLBButton.isSelected()) return "LLB";
+        if (EconomicsButton.isSelected()) return "Economics";
+        if (EnglishButton.isSelected()) return "English";
+        return "Unknown";
+    }
+
+    private void saveToFile(String studentName, String department, String batch) {
+        // Create a file with the name format: studentName-department-batch.txt
+        String filename = studentName + "-" + department + "-" + batch + ".txt";
+        File file = new File(filename);
+
+        try (FileWriter writer = new FileWriter(file)) {
+            // Write form data to the file
+            writer.write("Name: " + nameField.getText() + "\n");
+            writer.write("Father's Name: " + fatherNameField.getText() + "\n");
+            writer.write("Mother's Name: " + motherNameField.getText() + "\n");
+            writer.write("Phone Number: " + phoneNumberField.getText() + "\n");
+            writer.write("Email: " + emailField.getText() + "\n");
+            writer.write("Present Address: " + presentAddressField.getText() + "\n");
+            writer.write("Permanent Address: " + permanentAddressField.getText() + "\n");
+            writer.write("SSC GPA: " + sscGpaField.getText() + "\n");
+            writer.write("HSC GPA: " + hscGpaField.getText() + "\n");
+            writer.write("Department: " + department + "\n");
+            writer.write("Admission Batch: " + batch + "\n");
+            writer.write("Session: " + getSelectedSession() + "\n");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame, "Error saving form data: " + e.getMessage());
+        }
+    }
+
+    private String getSelectedSession() {
+        if (fallButton.isSelected()) return "Fall";
+        if (springButton.isSelected()) return "Spring";
+        if (summerButton.isSelected()) return "Summer";
+        return "Unknown";
     }
 
     public static void main(String[] args) {
